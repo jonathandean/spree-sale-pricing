@@ -14,4 +14,12 @@ Spree::Variant.class_eval do
   def on_sale?
     sale_prices.active.present?
   end
+
+  def original_price
+    self[:price]
+  end
+
+  def price
+    on_sale? ? sale_price : original_price
+  end
 end
