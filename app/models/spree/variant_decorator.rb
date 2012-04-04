@@ -11,7 +11,7 @@ Spree::Variant.class_eval do
 
   def sale_price
     # TODO instead of taking the first, take the lowest price
-    on_sale? ? sale_prices.active.first.price : price
+    on_sale? ? sale_prices.active.first.price : nil
   end
 
   def on_sale?
