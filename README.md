@@ -68,44 +68,55 @@ This extension gives you the same methods on both your Products and Variants. If
 values from your Master variant:
 
 **price**           Returns the sale price if currently on sale, the original price if not
+
 **sale_price**      Returns the sale price if currently on sale, nil if not
+
 **original_price**  Always returns the original price
+
 **on_sale?**        Return a boolean indication if it is currently on sale (enabled is set to true and we are currently within the active date range)
-**put_on_sale**     Put this item on sale (see below sections for options and more information)
-**create_sale**     Alias of put_on_sale
+
+**put\_on\_sale**     Put this item on sale (see below sections for options and more information)
+
+**create_sale**     Alias of ```put_on_sale```
 
 Since you have these methods available to both your products and variants, it is possible to put the product and all
-variants on sale or just particular variants. See the explanation of put_on_sale below for more information.
+variants on sale or just particular variants. See the explanation of put\_on\_sale below for more information.
 
 
-Options for put_on_sale (create_sale)
--------------------------------------
+Options for put\_on\_sale (create_sale)
+---------------------------------------
 
     put_on_sale(value, calculator_type = "Spree::Calculator::DollarAmountSalePriceCalculator", all_variants = true, start_at = Time.now, end_at = nil, enabled = true)
 
 **value**           (_float_)
+
 This is either the sale price that you want to sell the product for (if using the default DollarAmountSalePriceCalculator)
 or the float representation of the percentage off of the original price (between 0 and 1)
 
 **calculator_type** (_string_)    - Default: **"Spree::Calculator::DollarAmountSalePriceCalculator"**
+
 Specify which calculator to use for determining the sale price. The default calculator will take the value as is and use it
 as the sale price. You can also pass in another calculator value to determine the sale price differently, such as the
 provided "Spree::Calculator::PercentOffSalePriceCalculator", which will take a given percentage off of the original
 price.
 
 **all_variants**    (_boolean_)   - Default: **true**
+
 _Only for Spree::Product_. By default it set all of variants (including the master variant) for the product on sale. If you change this value to false
 it will only put the master variant on sale. Only change this if you know the implications.
 
 **start_at**        (_DateTime or nil_)  - Default: **Time.now**
+
 Specify the date and time that the sale takes effect. By default it uses the current time. It can also be nil but it's not
 recommended because for future reporting reasons you will probably want to know exactly when the sale started.
 
 **end_at**          (_DateTime or nil_)  - Default: **nil**
+
 Specify the end date of the sale or nil to keep the sale running indefinitely. For future reporting reasons it's recommended
 to set this at the time you decide to deactivate the sale rather than just setting enabled to false.
 
 **enabled**         (_boolean_)   - Default: **true**
+
 Disable this sale temporarily by setting this to false (overrides the start_at and end_at range). It's not recommended to
 use this to stop the sale when you decide to end it because it could impact future reporting needs. It's mainly intended
 to keep the sale disabled while you are still working on it and it isn't quite ready, or if you need to disable temporarily
