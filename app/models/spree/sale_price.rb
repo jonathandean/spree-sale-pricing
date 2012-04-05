@@ -11,9 +11,9 @@ module Spree
     }
 
     # TODO make this work or remove it
-    def self.calculators
-      Rails.application.config.spree.calculators.send(self.to_s.tableize.gsub('/', '_').sub('spree_', ''))
-    end
+    #def self.calculators
+    #  Rails.application.config.spree.calculators.send(self.to_s.tableize.gsub('/', '_').sub('spree_', ''))
+    #end
 
     def calculator_type
       calculator.class.to_s if calculator
@@ -26,6 +26,25 @@ module Spree
 
     def price
       calculator.compute self
+    end
+
+    def enable
+      update_attribute(:enabled, true)
+    end
+
+    def disable
+      update_attribute(:enabled, false)
+    end
+
+    def start(end_time = nil)
+      end_time = nil if end_time.present? && end_time <= Time.now # if end_time is not in the future then make it nil (no end)
+      attr = { end_at: end_time, enabled: true }
+      attr[:start_at] = Time.now if self.start_at.present? && self.start_at > Time.now # only set start_at if it's not set in the past
+      update_attributes(attr)
+    end
+
+    def stop
+      update_attributes({ end_at: Time.now, enabled: false })
     end
   end
 end
