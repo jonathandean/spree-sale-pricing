@@ -1,7 +1,7 @@
 module Spree
   class SalePrice < ActiveRecord::Base
     # TODO validations
-    belongs_to :variant, :class_name => "Spree::Variant"
+    belongs_to :price, :class_name => "Spree::Price"
     has_one :calculator, :class_name => "Spree::Calculator", :as => :calculable, :dependent => :destroy
     accepts_nested_attributes_for :calculator
     validates :calculator, :presence => true
