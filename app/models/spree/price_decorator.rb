@@ -25,6 +25,10 @@ Spree::Price.class_eval do
     on_sale? ? active_sale.price : nil
   end
 
+  def discount_percent
+    on_sale? ? (1 - (sale_price / original_price)) * 100 : 0.0
+  end
+
   def on_sale?
     sale_prices.active.present?
   end
