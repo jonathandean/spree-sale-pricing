@@ -1,14 +1,18 @@
 Spree::Price.class_eval do
   has_many :sale_prices
-
+  
   # TODO also accept a class reference for calculator type instead of only a string
   def put_on_sale(value, calculator_type = "Spree::Calculator::DollarAmountSalePriceCalculator", start_at = Time.now, end_at = nil, enabled = true)
-    sale_price = sale_prices.new({ value: value, start_at: start_at, end_at: end_at, enabled: enabled })
-    sale_price.calculator_type = calculator_type
-    sale_price.save
+    new_sale(value, calculator_type, start_at, end_at, enabled).save
   end
   alias :create_sale :put_on_sale
-
+  
+  def new_sale(value, calculator_type = "Spree::Calculator::DollarAmountSalePriceCalculator", start_at = Time.now, end_at = nil, enabled = true)
+    sale_price = sale_prices.new({ value: value, start_at: start_at, end_at: end_at, enabled: enabled })
+    sale_price.calculator_type = calculator_type
+    sale_price
+  end
+  
   # TODO make update_sale method
 
   def active_sale
@@ -24,6 +28,10 @@ Spree::Price.class_eval do
   def sale_price
     on_sale? ? active_sale.price : nil
   end
+  
+  def sale_price=(value)
+    on_sale? ? active_sale.value = value : new_sale(value)
+  end
 
   def discount_percent
     on_sale? ? (1 - (sale_price / original_price)) * 100 : 0.0
@@ -36,7 +44,11 @@ Spree::Price.class_eval do
   def original_price
     self[:amount]
   end
-
+  
+  def original_price=(value)
+    self.price = value
+  end
+  
   def price
     on_sale? ? sale_price : original_price
   end
